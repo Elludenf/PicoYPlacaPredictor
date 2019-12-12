@@ -46,7 +46,18 @@ namespace PicoYPlacaPredictor.Services
             {
                 if (item.Day == predictor.Date.ToString("ddd") && Array.Exists(item.Digits, digit => digit == Int32.Parse(lastDigit)))
                 {
-                    return false;
+                    foreach (var range in picoYPlacaOptions.Rules.Ranges)
+                    {
+                        var fromTime = range.From.Replace(":", String.Empty);
+                        var toTime = range.To.Replace(":", String.Empty);
+
+                        var timeToValidate = dateToValidate.ToString("HH:mm").Replace(":", String.Empty);
+                        if (Int32.Parse(timeToValidate) >= Int32.Parse(fromTime) && Int32.Parse(timeToValidate) <= Int32.Parse(toTime))
+                        {
+                            return false;
+                        }
+                    }
+                    return true;
                 }
             }
             return true;

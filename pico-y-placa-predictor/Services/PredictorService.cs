@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PicoYPlacaPredictor.Services
 {
-    public class PredictorService: IPredictorService
+    public class PredictorService : IPredictorService
     {
         public PredictorService(IConfiguration configuration)
         {
@@ -16,8 +16,14 @@ namespace PicoYPlacaPredictor.Services
 
         }
         public IConfiguration Configuration { get; }
-        
-        //TODO: REFACTOR LOGIC , TEST WITH HOLIDAYS, ADD WITH RESTRICTION BY DAY AND LAST DIGIT
+
+        /// <summary>
+        /// Service to determine wheter car can drive with given licence plate and date
+        /// The logic excludes holidays
+        /// And takes into consideration rules on environments settings
+        /// </summary>
+        /// <param name="predictor"></param>
+        /// <returns></returns>
         public async Task<bool> CanCarDrive(Predictor predictor)
         {
             var picoYPlacaOptions = new PicoYPlacaOptions();
@@ -27,28 +33,26 @@ namespace PicoYPlacaPredictor.Services
             foreach (var holiday in picoYPlacaOptions.Rules.HolidaysExceptions)
             {
                 var holidayInfo = holiday.Date.ToString().Split("/");
-                var holidayDate = new DateTime(Int32.Parse(holidayInfo[0]), Int32.Parse(holidayInfo[1]), DateTime.Now.Year);
+                var holidayDate = new DateTime(DateTime.Now.Year, Int32.Parse(holidayInfo[0]), Int32.Parse(holidayInfo[1]));
 
                 if ((holidayDate.Day == dateToValidate.Day && holidayDate.Month == dateToValidate.Month))
                 {
                     return true;
                 }
             }
-
+            string licencePlate = predictor.PlateNumber.Number;
+            string lastDigit = licencePlate.Substring(licencePlate.Length - 1);
             foreach (var item in picoYPlacaOptions.Rules.LincensePlateOptions)
             {
-                // TODO: FINISH LOGIC BY LAST PLATE NUMBER 
-                if(item.Day == predictor.Date.ToString("ddd") && predictor.PlateNumber.Number.ToString() == "1")
+                if (item.Day == predictor.Date.ToString("ddd") && Array.Exists(item.Digits, digit => digit == Int32.Parse(lastDigit)))
                 {
-
+                    return false;
                 }
             }
-
-           
             return true;
         }
 
-        
+
 
     }
 }

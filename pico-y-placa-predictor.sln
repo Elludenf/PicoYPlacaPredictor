@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PicoYPlacaPredictor", "pico
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tweetbook.Contracts", "PicoYPlaca.Contracts\Tweetbook.Contracts.csproj", "{2BF13575-A588-4A6E-8F83-0D372A5F09C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PicoYPlacaPredictor.Sdk", "PicoYPlacaPredictor.Sdk\PicoYPlacaPredictor.Sdk.csproj", "{20ACB921-72B1-44EC-A533-D27A68463226}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{2BF13575-A588-4A6E-8F83-0D372A5F09C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2BF13575-A588-4A6E-8F83-0D372A5F09C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2BF13575-A588-4A6E-8F83-0D372A5F09C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20ACB921-72B1-44EC-A533-D27A68463226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20ACB921-72B1-44EC-A533-D27A68463226}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20ACB921-72B1-44EC-A533-D27A68463226}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20ACB921-72B1-44EC-A533-D27A68463226}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -25,11 +25,14 @@ namespace PicoYPlacaPredictor.Controllers.V1
         /// <param name="Predictor"></param>
         /// <returns></returns>
         [HttpPost(ApiRoutes.Predictor.Validate)]
-        public async Task<IActionResult> Validate([FromBody] Predictor Predictor)
+        public async Task<IActionResult> Validate([FromBody] PredictorRequest PredictorRequest)
         {
             if (ModelState.IsValid)
             {
-                var result = await _predictorService.CanCarDrive(Predictor);
+                var _predictor = new Predictor();
+                _predictor.PlateNumber = PredictorRequest.PlateNumber;
+                _predictor.Date = PredictorRequest.Date;
+                var result = await _predictorService.CanCarDrive(_predictor);
 
                 if (result)
                 {

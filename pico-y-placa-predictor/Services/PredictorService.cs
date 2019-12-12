@@ -40,7 +40,7 @@ namespace PicoYPlacaPredictor.Services
                     return true;
                 }
             }
-            string licencePlate = predictor.PlateNumber.Number;
+            string licencePlate = predictor.PlateNumber;
             string lastDigit = licencePlate.Substring(licencePlate.Length - 1);
             foreach (var item in picoYPlacaOptions.Rules.LincensePlateOptions)
             {

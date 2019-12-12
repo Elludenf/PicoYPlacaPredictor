@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-namespace PicoYPlacaPredictor.Domain
+namespace Tweetbook.Contracts.V1.Requests
 {
-    public class Predictor
+    public class PredictorRequest
     {
         [Required(ErrorMessage = "The plate number is required.")]
         [RegularExpression(@"[a-z]{3}-[0-9]{4}", ErrorMessage = "Invalid plate number.")]

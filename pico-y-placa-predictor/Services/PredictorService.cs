@@ -13,8 +13,8 @@ namespace PicoYPlacaPredictor.Services
         public PredictorService(IConfiguration configuration)
         {
             Configuration = configuration;
-
         }
+
         public IConfiguration Configuration { get; }
 
         /// <summary>
@@ -30,40 +30,32 @@ namespace PicoYPlacaPredictor.Services
             Configuration.GetSection(nameof(PicoYPlacaOptions)).Bind(picoYPlacaOptions);
 
             var dateToValidate = predictor.Date;
-            foreach (var holiday in picoYPlacaOptions.Rules.HolidaysExceptions)
+            if (picoYPlacaOptions.Rules.HolidaysExceptions.Select(holiday => holiday.Date.ToString().Split("/"))
+                .Select(holidayInfo =>
+                    new DateTime(DateTime.Now.Year, Int32.Parse(holidayInfo[0]), Int32.Parse(holidayInfo[1])))
+                .Any(holidayDate =>
+                    (holidayDate.Day == dateToValidate.Day && holidayDate.Month == dateToValidate.Month)))
             {
-                var holidayInfo = holiday.Date.ToString().Split("/");
-                var holidayDate = new DateTime(DateTime.Now.Year, Int32.Parse(holidayInfo[0]), Int32.Parse(holidayInfo[1]));
-
-                if ((holidayDate.Day == dateToValidate.Day && holidayDate.Month == dateToValidate.Month))
-                {
-                    return true;
-                }
+                return true;
             }
+
             string licencePlate = predictor.PlateNumber;
             string lastDigit = licencePlate.Substring(licencePlate.Length - 1);
-            foreach (var item in picoYPlacaOptions.Rules.LincensePlateOptions)
+            if (picoYPlacaOptions.Rules.LincensePlateOptions.Any(item =>
+                item.Day == predictor.Date.ToString("ddd") &&
+                Array.Exists(item.Digits, digit => digit == Int32.Parse(lastDigit))))
             {
-                if (item.Day == predictor.Date.ToString("ddd") && Array.Exists(item.Digits, digit => digit == Int32.Parse(lastDigit)))
-                {
-                    foreach (var range in picoYPlacaOptions.Rules.Ranges)
-                    {
-                        var fromTime = range.From.Replace(":", String.Empty);
-                        var toTime = range.To.Replace(":", String.Empty);
-
-                        var timeToValidate = dateToValidate.ToString("HH:mm").Replace(":", String.Empty);
-                        if (Int32.Parse(timeToValidate) >= Int32.Parse(fromTime) && Int32.Parse(timeToValidate) <= Int32.Parse(toTime))
-                        {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
+                return !(
+                    from range in picoYPlacaOptions.Rules.Ranges
+                    let fromTime = range.From.Replace(":", String.Empty)
+                    let toTime = range.To.Replace(":", String.Empty)
+                    let timeToValidate = dateToValidate.ToString("HH:mm").Replace(":", String.Empty)
+                    where Convert.ToInt32(timeToValidate) >= Convert.ToInt32(fromTime) &&
+                          Convert.ToInt32(timeToValidate) <= Int32.Parse(toTime)
+                    select fromTime).Any();
             }
+
             return true;
         }
-
-
-
     }
 }
